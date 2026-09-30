@@ -27,6 +27,7 @@ export function HomeExperience({ catalog }: { catalog: Catalog }) {
   const [exam, setExam] = useState("all");
   const sessionSnapshot = useSyncExternalStore(subscribeToSessions, readSessionSnapshot, () => "[]");
   const sessions = JSON.parse(sessionSnapshot) as SavedSession[];
+  const resume = sessions[0];
 
   const href = practiceHref(bank, topic, exam);
   const count =
@@ -39,145 +40,77 @@ export function HomeExperience({ catalog }: { catalog: Catalog }) {
         : (catalog.exams.find((item) => String(item.exam) === exam)?.count ?? catalog.olderCount);
 
   return (
-    <section className="banks" id="banks">
-      <div className="section-heading">
-        <p className="eyebrow">What we are drilling</p>
-        <h2>Pick a bank.</h2>
+    <section className="home">
+      <h1>
+        CCA-F <em>practice</em>
+      </h1>
+
+      <div className="bank-row">
+        <label className={`bank-card bank-latest${bank === "latest" ? " is-selected" : ""}`}>
+          <input
+            type="radio"
+            name="bank"
+            value="latest"
+            checked={bank === "latest"}
+            onChange={() => {
+              setBank("latest");
+              prefetchBank("latest");
+            }}
+          />
+          <span className="bank-name">Latest</span>
+          <span className="bank-meta">{catalog.latestCount} questions</span>
+        </label>
+        <label className={`bank-card bank-older${bank === "older" ? " is-selected" : ""}`}>
+          <input
+            type="radio"
+            name="bank"
+            value="older"
+            checked={bank === "older"}
+            onChange={() => {
+              setBank("older");
+              prefetchBank("older");
+            }}
+          />
+          <span className="bank-name">Older dump</span>
+          <span className="bank-meta">{catalog.olderCount} · GitHub cca-prep</span>
+        </label>
       </div>
-
-      <fieldset className="bank-fieldset">
-        <legend className="sr-only">Question bank</legend>
-        <div className="bank-grid">
-          <label className={`bank-card bank-latest${bank === "latest" ? " is-selected" : ""}`}>
-            <input
-              type="radio"
-              name="bank"
-              value="latest"
-              checked={bank === "latest"}
-              onChange={() => {
-                setBank("latest");
-                prefetchBank("latest");
-              }}
-            />
-            <span className="product-meta">
-              <span>01 · Default</span>
-              <span className="status">
-                <i />
-                Latest
-              </span>
-            </span>
-            <span className="bank-title">Latest</span>
-            <span className="bank-label">{catalog.latestCount} questions · {catalog.topics.length} topics</span>
-            <span className="bank-copy">
-              The current CCA-F set for this cohort. This is the bank to use for present prep.
-            </span>
-          </label>
-
-          <label className={`bank-card bank-older${bank === "older" ? " is-selected" : ""}`}>
-            <input
-              type="radio"
-              name="bank"
-              value="older"
-              checked={bank === "older"}
-              onChange={() => {
-                setBank("older");
-                prefetchBank("older");
-              }}
-            />
-            <span className="product-meta">
-              <span>02 · Archive</span>
-              <span>Older dump</span>
-            </span>
-            <span className="bank-title">Older dump</span>
-            <span className="bank-label">GitHub cca-prep · {catalog.olderCount} questions</span>
-            <span className="bank-copy">
-              Six earlier practice exams from the public cca-prep repository. Kept separate from Latest so the two
-              sets stay easy to tell apart.
-            </span>
-          </label>
-        </div>
-      </fieldset>
-      {bank === "older" ? (
-        <p className="bank-source">
-          Older dump source:{" "}
-          <a href={catalog.olderRepo} target="_blank" rel="noreferrer">
-            github.com/devgotomarket/cca-prep
-          </a>
-        </p>
-      ) : null}
 
       {bank === "latest" ? (
-        <fieldset className="scope-fieldset">
-          <legend>Topic</legend>
-          <div className="chips" role="radiogroup" aria-label="Latest topics">
-            <label className="chip">
-              <input type="radio" name="topic" value="all" checked={topic === "all"} onChange={() => setTopic("all")} />
-              All topics
-              <small>{catalog.latestCount}</small>
-            </label>
+        <label className="scope">
+          Topic
+          <select value={topic} onChange={(event) => setTopic(event.target.value)}>
+            <option value="all">All topics</option>
             {catalog.topics.map((item) => (
-              <label className="chip" key={item.name}>
-                <input
-                  type="radio"
-                  name="topic"
-                  value={item.name}
-                  checked={topic === item.name}
-                  onChange={() => setTopic(item.name)}
-                />
-                {item.name}
-                <small>{item.count}</small>
-              </label>
+              <option key={item.name} value={item.name}>
+                {item.name} · {item.count}
+              </option>
             ))}
-          </div>
-        </fieldset>
+          </select>
+        </label>
       ) : (
-        <fieldset className="scope-fieldset">
-          <legend>Exam</legend>
-          <div className="chips" role="radiogroup" aria-label="Older dump exams">
-            <label className="chip">
-              <input type="radio" name="exam" value="all" checked={exam === "all"} onChange={() => setExam("all")} />
-              All six exams
-              <small>{catalog.olderCount}</small>
-            </label>
+        <label className="scope">
+          Exam
+          <select value={exam} onChange={(event) => setExam(event.target.value)}>
+            <option value="all">All six exams</option>
             {catalog.exams.map((item) => (
-              <label className="chip" key={item.exam}>
-                <input
-                  type="radio"
-                  name="exam"
-                  value={String(item.exam)}
-                  checked={exam === String(item.exam)}
-                  onChange={() => setExam(String(item.exam))}
-                />
-                Exam {item.exam}
-                <small>{item.count}</small>
-              </label>
+              <option key={item.exam} value={String(item.exam)}>
+                Exam {item.exam} · {item.count}
+              </option>
             ))}
-          </div>
-        </fieldset>
+          </select>
+        </label>
       )}
 
-      <div className="start-row">
-        <Link className="button button-dark" href={href} onMouseEnter={() => prefetchBank(bank)}>
-          Start practice · {count}
-          <ArrowIcon />
-        </Link>
-        <p>Your choice locks in, then the correct letter and the explanation open on the same screen.</p>
-      </div>
+      <Link className="button" href={href} onMouseEnter={() => prefetchBank(bank)}>
+        Start · {count}
+        <ArrowIcon />
+      </Link>
 
-      {sessions.length > 0 ? (
-        <div className="resume">
-          <p className="eyebrow">Continue in this browser</p>
-          <ul>
-            {sessions.slice(0, 4).map((session) => (
-              <li key={session.storageKey}>
-                <Link href={session.href}>
-                  <span>{session.label}</span>
-                  <small>{session.answered} answered</small>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+      {resume ? (
+        <Link className="resume" href={resume.href}>
+          Resume {resume.label} · {resume.answered} answered
+        </Link>
       ) : null}
     </section>
   );
