@@ -8,7 +8,7 @@ export function parsePracticeSearchParams(
   const bankRaw = params.get("bank");
 
   if (bankRaw && bankRaw !== "latest" && bankRaw !== "older") {
-    return { ok: false, message: "That question bank is not on this desk." };
+    return { ok: false, message: "That question bank isn’t available." };
   }
 
   const bank: BankId = bankRaw === "older" ? "older" : "latest";

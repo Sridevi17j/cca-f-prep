@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function PracticePage() {
   return (
-    <Suspense fallback={<p className="page-shell loading-copy">Opening the practice desk…</p>}>
+    <Suspense fallback={<p className="notice">Getting the questions…</p>}>
       <PracticeExam />
     </Suspense>
   );
