@@ -345,6 +345,7 @@ h2 { font-size: clamp(2.5rem, 4.6vw, 4.2rem); margin-bottom: 0; }
 }
 
 .chip {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -357,7 +358,11 @@ h2 { font-size: clamp(2.5rem, 4.6vw, 4.2rem); margin-bottom: 0; }
   cursor: pointer;
 }
 
-.chip input { position: absolute; opacity: 0; }
+.chip input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+}
 
 .chip small {
   font-size: 0.72rem;

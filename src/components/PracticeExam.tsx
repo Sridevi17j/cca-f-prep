@@ -296,8 +296,8 @@ function PracticeSession({ queryString }: { queryString: string }) {
               <li key={label}>
                 <span>{label}</span>
                 <strong>
-                  {row.correct}/{row.answered || 0}
-                  <small> correct of answered · {row.total} in set</small>
+                  {row.answered === 0 ? "Not started" : `${row.correct}/${row.answered} correct`}
+                  <small>{row.total} in this set</small>
                 </strong>
               </li>
             ))}
