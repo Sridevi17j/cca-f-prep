@@ -127,10 +127,10 @@ function PracticeSession({ queryString }: { queryString: string }) {
   if (!parsed.ok) {
     return (
       <section className="notice">
-        <h1>Unknown bank.</h1>
+        <h1>That link doesn’t match a set.</h1>
         <p>{parsed.message}</p>
         <Link className="button" href="/">
-          Back
+          Back home
         </Link>
       </section>
     );
@@ -141,19 +141,18 @@ function PracticeSession({ queryString }: { queryString: string }) {
       <section className="notice">
         <h1>{loadError}</h1>
         <Link className="button" href="/">
-          Back
+          Back home
         </Link>
       </section>
     );
   }
 
   if (!questions || !ready || !current) {
-    return <p className="notice">Opening {parsed.query.kicker}…</p>;
+    return <p className="notice">Getting the {parsed.query.kicker} questions…</p>;
   }
 
   const answeredCount = questions.filter((question) => answers[question.id]).length;
   const correctCount = questions.filter((question) => answers[question.id] === question.correct).length;
-  const score = answeredCount === 0 ? 0 : Math.round((correctCount / answeredCount) * 100);
   const chosen = answers[current.id];
   const topicLabel = current.topic || (current.exam ? `Exam ${current.exam}` : parsed.query.title);
 
@@ -183,8 +182,7 @@ function PracticeSession({ queryString }: { queryString: string }) {
           <span style={{ width: `${(answeredCount / questions.length) * 100}%` }} />
         </div>
         <p className="practice-score">
-          {answeredCount}/{questions.length}
-          {answeredCount > 0 ? ` · ${score}%` : ""}
+          {answeredCount === 0 ? `0 of ${questions.length}` : `${answeredCount} answered, ${correctCount} right`}
         </p>
       </div>
 
@@ -222,16 +220,18 @@ function PracticeSession({ queryString }: { queryString: string }) {
       {chosen ? (
         <div className={`feedback ${chosen === current.correct ? "is-correct" : "is-wrong"}`} role="status">
           <p className="feedback-title">
-            {chosen === current.correct ? "Correct" : "Wrong"}
-            <span>{chosen === current.correct ? `Choice ${current.correct}` : `Correct answer is ${current.correct}`}</span>
+            <strong>{chosen === current.correct ? "Correct" : "Wrong"}</strong>
+            <span>
+              {chosen === current.correct ? "That one holds up." : `The answer is ${current.correct}.`}
+            </span>
           </p>
           <RichText text={current.explanation} />
         </div>
       ) : (
-        <p className="answer-hint">Pick one. A–D also work.</p>
+        <p className="answer-hint">Choose the one that fits. A, B, C, and D work from the keyboard too.</p>
       )}
 
-      <div className="pager">
+      <div className={`pager${chosen ? " is-ready" : ""}`}>
         <button type="button" onClick={() => setIndex(safeIndex - 1)} disabled={safeIndex === 0}>
           Previous
         </button>
@@ -242,7 +242,7 @@ function PracticeSession({ queryString }: { queryString: string }) {
         >
           {questions.map((question, questionIndex) => (
             <option key={question.id} value={questionIndex}>
-              {questionIndex + 1} / {questions.length}
+              Question {questionIndex + 1} of {questions.length}
             </option>
           ))}
         </select>
@@ -252,8 +252,8 @@ function PracticeSession({ queryString }: { queryString: string }) {
           onClick={() => setIndex(Math.min(safeIndex + 1, questions.length - 1))}
           disabled={safeIndex === questions.length - 1}
         >
-          Next
-          <ArrowIcon />
+          {safeIndex === questions.length - 1 ? "Last question" : "Next"}
+          {safeIndex === questions.length - 1 ? null : <ArrowIcon />}
         </button>
       </div>
     </section>

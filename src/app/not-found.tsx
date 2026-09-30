@@ -3,9 +3,9 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <section className="notice">
-      <h1>Page not found.</h1>
+      <h1>We couldn’t find that page.</h1>
       <Link className="button" href="/">
-        Back
+        Back home
       </Link>
     </section>
   );

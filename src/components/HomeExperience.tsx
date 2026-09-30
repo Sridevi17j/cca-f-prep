@@ -41,9 +41,12 @@ export function HomeExperience({ catalog }: { catalog: Catalog }) {
 
   return (
     <section className="home">
-      <h1>
-        CCA-F <em>practice</em>
-      </h1>
+      <div className="home-intro">
+        <h1>
+          Practice <em>CCA-F</em>
+        </h1>
+        <p>Pick a set, answer one question, and read why it landed that way.</p>
+      </div>
 
       <div className="bank-row">
         <label className={`bank-card bank-latest${bank === "latest" ? " is-selected" : ""}`}>
@@ -58,7 +61,7 @@ export function HomeExperience({ catalog }: { catalog: Catalog }) {
             }}
           />
           <span className="bank-name">Latest</span>
-          <span className="bank-meta">{catalog.latestCount} questions</span>
+          <span className="bank-meta">Current set · {catalog.latestCount} questions</span>
         </label>
         <label className={`bank-card bank-older${bank === "older" ? " is-selected" : ""}`}>
           <input
@@ -72,15 +75,15 @@ export function HomeExperience({ catalog }: { catalog: Catalog }) {
             }}
           />
           <span className="bank-name">Older dump</span>
-          <span className="bank-meta">{catalog.olderCount} · GitHub cca-prep</span>
+          <span className="bank-meta">Earlier cca-prep set · {catalog.olderCount}</span>
         </label>
       </div>
 
       {bank === "latest" ? (
         <label className="scope">
-          Topic
+          Focus
           <select value={topic} onChange={(event) => setTopic(event.target.value)}>
-            <option value="all">All topics</option>
+            <option value="all">All topics in Latest</option>
             {catalog.topics.map((item) => (
               <option key={item.name} value={item.name}>
                 {item.name} · {item.count}
@@ -90,7 +93,7 @@ export function HomeExperience({ catalog }: { catalog: Catalog }) {
         </label>
       ) : (
         <label className="scope">
-          Exam
+          Which exam
           <select value={exam} onChange={(event) => setExam(event.target.value)}>
             <option value="all">All six exams</option>
             {catalog.exams.map((item) => (
@@ -103,15 +106,17 @@ export function HomeExperience({ catalog }: { catalog: Catalog }) {
       )}
 
       <Link className="button" href={href} onMouseEnter={() => prefetchBank(bank)}>
-        Start · {count}
+        Start with {count} questions
         <ArrowIcon />
       </Link>
 
       {resume ? (
         <Link className="resume" href={resume.href}>
-          Resume {resume.label} · {resume.answered} answered
+          Continue where you left off · {resume.label} · {resume.answered} answered
         </Link>
-      ) : null}
+      ) : (
+        <p className="home-note">Nothing in progress yet. Your answers stay in this browser.</p>
+      )}
     </section>
   );
 }
