@@ -273,9 +273,9 @@ function PracticeSession({ queryString }: { queryString: string }) {
             <p className="feedback-verdict">
               <strong>{chosen === current.correct ? "Correct" : "Wrong"}</strong>
             </p>
-            <p className="feedback-answer">
-              {chosen === current.correct ? "That one holds up." : `The answer is ${current.correct}.`}
-            </p>
+            {chosen === current.correct ? null : (
+              <p className="feedback-answer">The answer is {current.correct}.</p>
+            )}
           </div>
           <div className="explanation">
             <p className="explanation-label">Explanation</p>

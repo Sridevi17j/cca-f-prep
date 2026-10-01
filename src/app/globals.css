@@ -18,16 +18,14 @@
 * { box-sizing: border-box; }
 
 html, body {
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%;
 }
 
 body {
   margin: 0;
   display: flex;
   flex-direction: column;
-  height: 100dvh;
-  max-height: 100dvh;
+  min-height: 100dvh;
   background: var(--bg);
   color: var(--ink);
   font-family: var(--sans);
@@ -96,21 +94,17 @@ h1, p { margin: 0; }
 
 main {
   flex: 1;
-  min-height: 0;
   display: flex;
   flex-direction: column;
 }
 
 .home, .practice, .notice {
-  flex: 1;
-  min-height: 0;
   width: min(100% - 40px, 760px);
   margin: 0 auto;
-  overflow: hidden;
 }
 
 .home {
-  height: 100%;
+  min-height: calc(100dvh - 52px);
   display: flex;
   align-items: center;
 }
@@ -200,11 +194,10 @@ main {
 
 .practice {
   width: min(100% - 40px, 860px);
-  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px 0 18px;
+  gap: 16px;
+  padding: 20px 0 32px;
 }
 
 .practice-bar,
@@ -318,14 +311,7 @@ main {
 }
 .bar span { display: block; height: 100%; background: var(--yellow); }
 
-.stem, .options, .feedback {
-  min-height: 0;
-  overflow: auto;
-}
-
 .stem {
-  flex: 0 1 auto;
-  max-height: 30%;
   padding-right: 4px;
 }
 
@@ -339,8 +325,6 @@ main {
 .stem .rich p:last-child, .feedback .rich p:last-child { margin-bottom: 0; }
 
 .options {
-  flex: 0 1 auto;
-  max-height: 46%;
   display: grid;
   align-content: start;
   gap: 8px;
@@ -381,14 +365,11 @@ main {
 .option-text { padding-top: 3px; font-size: 0.95rem; }
 
 .feedback {
-  flex: none;
-  max-height: 24%;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  overflow: hidden;
   border-radius: 12px;
-  padding: 10px 12px;
+  padding: 12px 14px;
 }
 .feedback.is-correct { background: var(--correct-bg); color: var(--correct); }
 .feedback.is-wrong { background: var(--wrong-bg); color: var(--wrong); }
@@ -417,7 +398,6 @@ main {
 }
 .explanation {
   min-height: 0;
-  overflow: auto;
 }
 .explanation-label {
   margin: 0 0 2px;
@@ -559,17 +539,13 @@ main {
     font-weight: 700;
   }
   .exam-switch a { width: 34px; padding: 0; }
-  .stem { max-height: 22%; }
-  .feedback { max-height: 22%; }
-  .practice { gap: 10px; padding-top: 12px; }
+  .practice { gap: 12px; padding-top: 16px; }
 }
 
 @media (max-height: 700px) {
   .home h1, .notice h1 { font-size: 1.7rem; }
   .hero { gap: 10px; }
   .hero p { font-size: 0.95rem; }
-  .stem { max-height: 20%; }
-  .feedback { max-height: 22%; }
   .button { min-height: 42px; }
   .pager button, .jump input { height: 40px; }
   .pager.is-ready button.pager-next,
