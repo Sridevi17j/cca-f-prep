@@ -207,7 +207,8 @@ main {
   padding: 16px 0 18px;
 }
 
-.practice-bar {
+.practice-bar,
+.practice-progress {
   flex: none;
   display: flex;
   align-items: center;
@@ -215,13 +216,37 @@ main {
   min-height: 28px;
 }
 
+.quiz-home {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--white);
+  text-decoration: none;
+  font-size: 0.86rem;
+  font-weight: 650;
+}
+.quiz-home:hover { border-color: var(--ink); }
+
 .practice-label {
   min-width: 0;
+  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 0.88rem;
   font-weight: 600;
+}
+
+.practice-position {
+  flex: none;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 
 .practice-score {
@@ -333,19 +358,42 @@ main {
 .pager {
   flex: none;
   display: grid;
-  grid-template-columns: 0.85fr minmax(0, 1.1fr) 1.25fr;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 8px;
-  align-items: stretch;
+  align-items: center;
 }
 
-.pager button, .pager select {
+.pager button {
   height: 44px;
+  padding: 0 14px;
   border: 1px solid var(--line-strong);
   border-radius: 12px;
   background: var(--white);
   font-weight: 600;
   font-size: 0.95rem;
 }
+
+.jump {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.jump input {
+  width: 5.5rem;
+  height: 44px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: var(--white);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.jump input::placeholder { color: var(--muted); font-weight: 550; }
+.jump input[aria-invalid="true"] { border-color: var(--wrong); }
+.jump button { padding: 0 12px; }
 
 .pager button.pager-next {
   display: inline-flex;
@@ -360,7 +408,8 @@ main {
 
 .pager.is-ready button.pager-next,
 .pager.is-ready button:first-child,
-.pager.is-ready select {
+.pager.is-ready .jump input,
+.pager.is-ready .jump button {
   height: 48px;
 }
 
@@ -422,8 +471,9 @@ main {
   .stem { max-height: 22%; }
   .feedback { max-height: 18%; }
   .button { min-height: 42px; }
-  .pager button, .pager select { height: 40px; }
+  .pager button, .jump input { height: 40px; }
   .pager.is-ready button.pager-next,
   .pager.is-ready button:first-child,
-  .pager.is-ready select { height: 44px; }
+  .pager.is-ready .jump input,
+  .pager.is-ready .jump button { height: 44px; }
 }

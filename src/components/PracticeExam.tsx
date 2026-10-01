@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { loadQuestions } from "@/lib/load-bank";
 import { isChoiceId } from "@/lib/normalize";
 import { applyQuery, parsePracticeSearchParams } from "@/lib/query";
@@ -25,6 +25,8 @@ function PracticeSession({ queryString }: { queryString: string }) {
   const [ready, setReady] = useState(false);
   const [answers, setAnswers] = useState<Record<string, ChoiceId>>({});
   const [index, setIndex] = useState(0);
+  const [jumpValue, setJumpValue] = useState("");
+  const [jumpInvalid, setJumpInvalid] = useState(false);
 
   useEffect(() => {
     if (!parsed.ok) return;
@@ -151,6 +153,7 @@ function PracticeSession({ queryString }: { queryString: string }) {
     return <p className="notice">Getting the {parsed.query.kicker} questions…</p>;
   }
 
+  const total = questions.length;
   const answeredCount = questions.filter((question) => answers[question.id]).length;
   const correctCount = questions.filter((question) => answers[question.id] === question.correct).length;
   const chosen = answers[current.id];
@@ -165,29 +168,49 @@ function PracticeSession({ queryString }: { queryString: string }) {
     });
   }
 
+  function jumpTo(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const next = Number(jumpValue);
+    if (!Number.isInteger(next) || next < 1 || next > total) {
+      setJumpInvalid(true);
+      return;
+    }
+    setJumpInvalid(false);
+    setJumpValue("");
+    setIndex(next - 1);
+  }
+
   return (
     <section className="practice">
       <div className="practice-bar">
+        <Link href="/" className="quiz-home">
+          Home
+        </Link>
         <p className="practice-label">
           {parsed.query.kicker} · {topicLabel}
         </p>
+        <p className="practice-position">
+          {safeIndex + 1} / {total}
+        </p>
+      </div>
+      <div className="practice-progress">
         <div
           className="bar"
           role="progressbar"
           aria-valuemin={0}
-          aria-valuemax={questions.length}
+          aria-valuemax={total}
           aria-valuenow={answeredCount}
           aria-label="Questions answered"
         >
           <span style={{ width: `${(answeredCount / questions.length) * 100}%` }} />
         </div>
         <p className="practice-score">
-          {answeredCount === 0 ? `0 of ${questions.length}` : `${answeredCount} answered, ${correctCount} right`}
+          {answeredCount === 0 ? "0 answered" : `${answeredCount} answered · ${correctCount} right`}
         </p>
       </div>
 
       <h2 className="sr-only">
-        Question {safeIndex + 1} of {questions.length}
+        Question {safeIndex + 1} of {total}
       </h2>
       <div className="stem">
         <RichText text={current.question} />
@@ -235,24 +258,32 @@ function PracticeSession({ queryString }: { queryString: string }) {
         <button type="button" onClick={() => setIndex(safeIndex - 1)} disabled={safeIndex === 0}>
           Previous
         </button>
-        <select
-          aria-label="Jump to question"
-          value={safeIndex}
-          onChange={(event) => setIndex(Number(event.target.value))}
-        >
-          {questions.map((question, questionIndex) => (
-            <option key={question.id} value={questionIndex}>
-              Question {questionIndex + 1} of {questions.length}
-            </option>
-          ))}
-        </select>
+        <form className="jump" onSubmit={jumpTo}>
+          <label>
+            <span className="sr-only">Go to question number</span>
+            <input
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={jumpValue}
+              placeholder="Go to #"
+              aria-invalid={jumpInvalid}
+              aria-label={`Go to question, 1 to ${total}`}
+              onChange={(event) => {
+                setJumpValue(event.target.value.replace(/\D/g, "").slice(0, 3));
+                setJumpInvalid(false);
+              }}
+            />
+          </label>
+          <button type="submit">Go</button>
+        </form>
         <button
           type="button"
           className="pager-next"
-          onClick={() => setIndex(Math.min(safeIndex + 1, questions.length - 1))}
-          disabled={safeIndex === questions.length - 1}
+          onClick={() => setIndex(Math.min(safeIndex + 1, total - 1))}
+          disabled={safeIndex === total - 1}
         >
-          {safeIndex === questions.length - 1 ? "Last question" : "Next"}
+          Next
           {safeIndex === questions.length - 1 ? null : <ArrowIcon />}
         </button>
       </div>
