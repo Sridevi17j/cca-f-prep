@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { loadQuestions } from "@/lib/load-bank";
 import { isChoiceId } from "@/lib/normalize";
 import { applyQuery, parsePracticeSearchParams } from "@/lib/query";
 import { fullStorageKey, type StoredSession } from "@/lib/session";
 import type { ChoiceId, Question } from "@/lib/types";
-import { ArrowIcon } from "./icons";
+import { ArrowIcon, HomeIcon } from "./icons";
+
+const OLDER_EXAMS = [1, 2, 3, 4, 5, 6] as const;
 import { RichText } from "./RichText";
 
 export function PracticeExam() {
@@ -18,7 +20,9 @@ export function PracticeExam() {
 }
 
 function PracticeSession({ queryString }: { queryString: string }) {
+  const router = useRouter();
   const parsed = useMemo(() => parsePracticeSearchParams(new URLSearchParams(queryString)), [queryString]);
+  const needsDefaultExam = parsed.ok && parsed.query.bank === "older" && parsed.query.exam == null;
 
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -29,7 +33,12 @@ function PracticeSession({ queryString }: { queryString: string }) {
   const [jumpInvalid, setJumpInvalid] = useState(false);
 
   useEffect(() => {
-    if (!parsed.ok) return;
+    if (!needsDefaultExam) return;
+    router.replace("/practice?bank=older&exam=1");
+  }, [needsDefaultExam, router]);
+
+  useEffect(() => {
+    if (!parsed.ok || needsDefaultExam) return;
 
     let cancelled = false;
 
@@ -82,7 +91,7 @@ function PracticeSession({ queryString }: { queryString: string }) {
     return () => {
       cancelled = true;
     };
-  }, [parsed]);
+  }, [parsed, needsDefaultExam]);
 
   useEffect(() => {
     if (!parsed.ok || !ready || !questions) return;
@@ -157,7 +166,9 @@ function PracticeSession({ queryString }: { queryString: string }) {
   const answeredCount = questions.filter((question) => answers[question.id]).length;
   const correctCount = questions.filter((question) => answers[question.id] === question.correct).length;
   const chosen = answers[current.id];
+  const isOlder = parsed.query.bank === "older";
   const topicLabel = current.topic || (current.exam ? `Exam ${current.exam}` : parsed.query.title);
+  const setLabel = isOlder ? "Older dump" : `${parsed.query.kicker} · ${topicLabel}`;
 
   function choose(choice: ChoiceId) {
     const questionId = current?.id;
@@ -182,13 +193,29 @@ function PracticeSession({ queryString }: { queryString: string }) {
 
   return (
     <section className="practice">
-      <div className="practice-bar">
+      <div className={`practice-bar${isOlder ? " is-older" : ""}`}>
         <Link href="/" className="quiz-home">
+          <HomeIcon />
           Home
         </Link>
-        <p className="practice-label">
-          {parsed.query.kicker} · {topicLabel}
-        </p>
+        {isOlder ? (
+          <nav className="exam-switch" aria-label="Switch exam">
+            <span className="exam-switch-label">Exam</span>
+            {OLDER_EXAMS.map((exam) => (
+              <Link
+                key={exam}
+                href={`/practice?bank=older&exam=${exam}`}
+                className={parsed.query.exam === exam ? "is-active" : ""}
+                aria-current={parsed.query.exam === exam ? "page" : undefined}
+                aria-label={`Exam ${exam}`}
+              >
+                <span className="exam-word">Exam </span>
+                {exam}
+              </Link>
+            ))}
+          </nav>
+        ) : null}
+        <p className="practice-label">{setLabel}</p>
         <p className="practice-position">
           {safeIndex + 1} / {total}
         </p>
@@ -242,13 +269,18 @@ function PracticeSession({ queryString }: { queryString: string }) {
 
       {chosen ? (
         <div className={`feedback ${chosen === current.correct ? "is-correct" : "is-wrong"}`} role="status">
-          <p className="feedback-title">
-            <strong>{chosen === current.correct ? "Correct" : "Wrong"}</strong>
-            <span>
+          <div className="feedback-head">
+            <p className="feedback-verdict">
+              <strong>{chosen === current.correct ? "Correct" : "Wrong"}</strong>
+            </p>
+            <p className="feedback-answer">
               {chosen === current.correct ? "That one holds up." : `The answer is ${current.correct}.`}
-            </span>
-          </p>
-          <RichText text={current.explanation} />
+            </p>
+          </div>
+          <div className="explanation">
+            <p className="explanation-label">Explanation</p>
+            <RichText text={current.explanation} />
+          </div>
         </div>
       ) : (
         <p className="answer-hint">Choose the one that fits. A, B, C, and D work from the keyboard too.</p>

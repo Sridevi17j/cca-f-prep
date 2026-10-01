@@ -36,7 +36,7 @@ export function HomeExperience({ catalog }: { catalog: Catalog }) {
           </Link>
           <Link
             className="button button-secondary"
-            href="/practice?bank=older"
+            href="/practice?bank=older&exam=1"
             onMouseEnter={() => prefetchBank("older")}
           >
             Older dump

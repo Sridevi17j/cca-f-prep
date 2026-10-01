@@ -183,7 +183,7 @@ main {
   background: var(--bg);
 }
 
-.button svg, .pager-next svg {
+.button svg, .pager-next svg, .quiz-home svg {
   width: 16px;
   height: 16px;
   fill: none;
@@ -220,16 +220,69 @@ main {
   flex: none;
   display: inline-flex;
   align-items: center;
-  height: 32px;
-  padding: 0 12px;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px 0 12px;
   border: 1px solid var(--line-strong);
-  border-radius: 999px;
+  border-radius: 12px;
   background: var(--white);
   text-decoration: none;
-  font-size: 0.86rem;
+  font-size: 0.95rem;
   font-weight: 650;
+  box-shadow: 0 1px 2px #1c1d2112;
 }
-.quiz-home:hover { border-color: var(--ink); }
+.quiz-home:hover { background: #f3f4f6; border-color: #b7bdc8; }
+
+.practice-bar.is-older {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "home tabs"
+    "label position";
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 8px;
+}
+.practice-bar.is-older .quiz-home { grid-area: home; justify-self: start; }
+.practice-bar.is-older .exam-switch { grid-area: tabs; justify-self: end; }
+.practice-bar.is-older .practice-label { grid-area: label; }
+.practice-bar.is-older .practice-position { grid-area: position; justify-self: end; }
+
+.exam-switch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.exam-switch-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.exam-switch a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--white);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.exam-switch a:hover:not(.is-active) { background: #f3f4f6; }
+.exam-switch a.is-active {
+  background: var(--yellow);
+  border-color: transparent;
+}
 
 .practice-label {
   min-width: 0;
@@ -329,25 +382,49 @@ main {
 
 .feedback {
   flex: none;
-  max-height: 22%;
+  max-height: 24%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
   border-radius: 12px;
   padding: 10px 12px;
 }
 .feedback.is-correct { background: var(--correct-bg); color: var(--correct); }
 .feedback.is-wrong { background: var(--wrong-bg); color: var(--wrong); }
-.feedback.is-correct .rich, .feedback.is-wrong .rich { color: var(--ink); }
+.feedback .rich { color: var(--ink); font-size: 0.88rem; line-height: 1.4; }
 
-.feedback-title {
+.feedback-head {
+  position: relative;
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  margin-bottom: 4px;
-  font-size: 0.95rem;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-height: 28px;
 }
-
-.feedback-title strong { font-size: 1rem; }
-.feedback .rich { font-size: 0.88rem; line-height: 1.4; }
+.feedback-verdict {
+  position: absolute;
+  left: 0;
+  margin: 0;
+  font-size: 1rem;
+}
+.feedback-answer {
+  margin: 0;
+  padding: 0 5.5rem;
+  text-align: center;
+  font-size: 1.08rem;
+  font-weight: 750;
+}
+.explanation {
+  min-height: 0;
+  overflow: auto;
+}
+.explanation-label {
+  margin: 0 0 2px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
 
 .answer-hint {
   flex: none;
@@ -459,8 +536,31 @@ main {
   .hero { gap: 14px; }
   .hero-actions { width: 100%; }
   .hero-actions .button { flex: 1; }
-  .stem { max-height: 24%; }
-  .feedback { max-height: 20%; }
+  .exam-word {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .exam-switch-label {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0 6px 0 0;
+    overflow: visible;
+    clip: auto;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+  .exam-switch a { width: 34px; padding: 0; }
+  .stem { max-height: 22%; }
+  .feedback { max-height: 22%; }
   .practice { gap: 10px; padding-top: 12px; }
 }
 
@@ -468,8 +568,8 @@ main {
   .home h1, .notice h1 { font-size: 1.7rem; }
   .hero { gap: 10px; }
   .hero p { font-size: 0.95rem; }
-  .stem { max-height: 22%; }
-  .feedback { max-height: 18%; }
+  .stem { max-height: 20%; }
+  .feedback { max-height: 22%; }
   .button { min-height: 42px; }
   .pager button, .jump input { height: 40px; }
   .pager.is-ready button.pager-next,
