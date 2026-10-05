@@ -106,7 +106,10 @@ main {
 .home {
   min-height: calc(100dvh - 52px);
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: safe center;
+  padding: 28px 0 36px;
 }
 
 .hero {
@@ -114,7 +117,8 @@ main {
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-  max-width: 34rem;
+  width: 100%;
+  max-width: 40rem;
 }
 
 .home h1, .notice h1 {
@@ -191,6 +195,107 @@ main {
   text-underline-offset: 3px;
 }
 .resume:hover { color: var(--ink); }
+
+.progress {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.progress-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.progress-head h2,
+.progress-group {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.progress-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-group {
+  padding-top: 6px;
+}
+
+.progress-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px 12px;
+  align-items: center;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.progress-name {
+  font-size: 0.95rem;
+  font-weight: 650;
+}
+
+.progress-meta {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-track {
+  display: block;
+  height: 4px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: #e7e9ee;
+  overflow: hidden;
+}
+
+.progress-track span {
+  display: block;
+  height: 100%;
+  background: var(--yellow);
+}
+
+.progress-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-actions a {
+  font-size: 0.88rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.progress-actions a:hover { text-decoration: underline; }
+
+.quiet-button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 4px 0;
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.quiet-button:hover:not(:disabled) { color: var(--ink); }
+.quiet-button:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .practice {
   width: min(100% - 40px, 860px);
