@@ -49,8 +49,8 @@ function PracticeSession({ queryString }: { queryString: string }) {
         if (!subset) {
           setLoadError(
             parsed.query.bank === "latest"
-              ? "That topic is not in the Latest bank."
-              : "That exam is not in the Older dump.",
+              ? "That topic is not in the recent exam questions."
+              : "That exam is not one of the older exams.",
           );
           setQuestions([]);
           setReady(true);
@@ -159,7 +159,7 @@ function PracticeSession({ queryString }: { queryString: string }) {
   }
 
   if (!questions || !ready || !current) {
-    return <p className="notice">Getting the {parsed.query.kicker} questions…</p>;
+    return <p className="notice">Getting {parsed.query.kicker.toLowerCase()}…</p>;
   }
 
   const total = questions.length;
@@ -168,7 +168,7 @@ function PracticeSession({ queryString }: { queryString: string }) {
   const chosen = answers[current.id];
   const isOlder = parsed.query.bank === "older";
   const topicLabel = current.topic || (current.exam ? `Exam ${current.exam}` : parsed.query.title);
-  const setLabel = isOlder ? "Older dump" : `${parsed.query.kicker} · ${topicLabel}`;
+  const setLabel = isOlder ? "Older exams" : topicLabel ? `${parsed.query.kicker} · ${topicLabel}` : parsed.query.kicker;
 
   function choose(choice: ChoiceId) {
     const questionId = current?.id;

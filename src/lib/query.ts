@@ -22,7 +22,7 @@ export function parsePracticeSearchParams(
         topic: topic && topic.length > 0 ? topic : null,
         exam: null,
         storageKey: topic ? `latest:${encodeURIComponent(topic)}` : "latest",
-        kicker: "Latest",
+        kicker: "Recent exam questions",
         title: topic && topic.length > 0 ? topic : "All topics",
       },
     };
@@ -33,7 +33,7 @@ export function parsePracticeSearchParams(
 
   if (examRaw && examRaw !== "all") {
     if (!/^[1-6]$/.test(examRaw)) {
-      return { ok: false, message: "Older dump exams are numbered 1 through 6." };
+      return { ok: false, message: "Older exams are numbered 1 through 6." };
     }
     exam = Number(examRaw);
   }
@@ -45,7 +45,7 @@ export function parsePracticeSearchParams(
       topic: null,
       exam,
       storageKey: exam ? `older:${exam}` : "older",
-      kicker: "Older dump · GitHub cca-prep",
+      kicker: "Older exams",
       title: exam ? `Exam ${exam}` : "All six exams",
       repoHref: OLDER_REPO,
     },

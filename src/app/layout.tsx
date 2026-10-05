@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     template: "%s · PiHive",
   },
   description:
-    "PiHive practice for CCA-F. Latest bank or the older GitHub cca-prep dump, with an explanation after every answer.",
+    "PiHive practice for CCA-F. Recent exam questions or older exams, with an explanation after every answer.",
 };
 
 export const viewport: Viewport = {

@@ -109,12 +109,12 @@ export function practiceHrefFromStorageKey(storageKey: string): string | null {
 }
 
 export function labelForStorageKey(storageKey: string): string {
-  if (storageKey === "latest") return "Latest · All topics";
+  if (storageKey === "latest") return "Recent exam questions";
   if (storageKey.startsWith("latest:")) {
-    return `Latest · ${decodeURIComponent(storageKey.slice("latest:".length))}`;
+    return `Recent exam questions · ${decodeURIComponent(storageKey.slice("latest:".length))}`;
   }
-  if (storageKey === "older") return "Older dump · All six exams";
-  if (storageKey.startsWith("older:")) return `Older dump · Exam ${storageKey.slice("older:".length)}`;
+  if (storageKey === "older") return "Older exams";
+  if (storageKey.startsWith("older:")) return `Older exams · Exam ${storageKey.slice("older:".length)}`;
   return storageKey;
 }
 

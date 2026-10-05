@@ -4,8 +4,8 @@ Practice desk for [PiHive Technologies](https://pihivetech.com) cohort participa
 
 ## Question banks
 
-- **Latest** (default) — 134 questions with five topics. This is the bank for current prep.
-- **Older dump** (GitHub cca-prep) — 350 questions, six practice exams, from [devgotomarket/cca-prep](https://github.com/devgotomarket/cca-prep). It is labeled Older dump everywhere so it is not confused with Latest.
+- **Recent exam questions** (default) — 134 questions with five topics. This is the set for current prep.
+- **Older exams** — 350 questions across Exam 1–6, from [devgotomarket/cca-prep](https://github.com/devgotomarket/cca-prep).
 
 The older source file merges some correct choices into the previous option and sometimes repeats the answer at the end of the stem. `src/lib/normalize.ts` repairs that at load time. The JSON in `src/data/` is the original upload.
 

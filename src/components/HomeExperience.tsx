@@ -55,7 +55,7 @@ export function HomeExperience({ catalog }: { catalog: Catalog }) {
     const next: ProgressRow[] = [
       {
         storageKey: "latest",
-        label: "Latest",
+        label: "Recent exam questions",
         href: "/practice?bank=latest",
         total: catalog.latestCount,
         ...tally(latestQuestions, answersByKey.get("latest")),
@@ -97,11 +97,11 @@ export function HomeExperience({ catalog }: { catalog: Catalog }) {
         <p>Answer one question at a time, then see why that choice was right or wrong.</p>
         <div className="hero-actions">
           <Link className="button" href="/practice?bank=latest" onMouseEnter={() => void loadQuestions("latest")}>
-            Start Latest
+            Recent exam questions
             <span className="button-count">{catalog.latestCount}</span>
           </Link>
           <Link className="button button-secondary" href="/practice?bank=older&exam=1">
-            Older dump
+            Older exams
             <span className="button-count">{catalog.olderCount}</span>
           </Link>
         </div>
@@ -115,7 +115,7 @@ export function HomeExperience({ catalog }: { catalog: Catalog }) {
           </div>
           <ul className="progress-list">
             {latestRow ? <ProgressItem row={latestRow} onReset={resetOne} /> : null}
-            {examRows.length > 0 ? <li className="progress-group">Older dump</li> : null}
+            {examRows.length > 0 ? <li className="progress-group">Older exams</li> : null}
             {examRows.map((row) => (
               <ProgressItem key={row.storageKey} row={row} onReset={resetOne} />
             ))}

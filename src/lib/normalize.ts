@@ -3,7 +3,7 @@ import type { Choice, ChoiceId, Question, RawQuestion } from "./types";
 const CHOICES: readonly ChoiceId[] = ["A", "B", "C", "D"];
 
 /**
- * The older dump stores some correct choices inside the previous option
+ * The older exams file stores some correct choices inside the previous option
  * (`\n* B) ...`) and sometimes repeats the correct choice at the end of the
  * stem (`* **A) ...**`). Repair both so the practice UI can show four real
  * choices without spoiling the answer.
