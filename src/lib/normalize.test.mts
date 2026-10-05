@@ -37,7 +37,7 @@ test("latest bank stays a clean set of 134 questions", () => {
   }
 });
 
-test("older dump repairs merged choices and strips spoilers", () => {
+test("older exams repair merged choices and strips spoilers", () => {
   const questions = normalizeOlder(olderRaw);
   assert.equal(questions.length, 350);
 
